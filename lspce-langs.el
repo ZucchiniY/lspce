@@ -24,7 +24,13 @@
     (lspce--add-option "completion.postfix.enable" :json-false options)
     (lspce--add-option "completion.autoimport.enable" t options)
     (lspce--add-option "procMacro.enable" t options)
-    (lspce--add-option "lens.enable" :json-false options)))
+    (lspce--add-option "lens.enable" :json-false options)
+    ;; CPU config
+    (lspce--add-option "checkOnSave" nil options)
+    (lspce--add-option "cachPriming.enable" nil options)
+    (lspce--add-option "lru.capacity" 16384 options)
+    ;; (lspce--add-option "lru.capacity" 8192 options)
+    ))
 
 ;;; java jdtls
 (defcustom lspce-jdtls-workspace-dir (expand-file-name "~/.jdtls/workspace/")
@@ -138,7 +144,7 @@ The entry point of the language server is in
                  (t "config_linux"))))
     (let ((inhibit-message t))
       (message (format "using config for %s" config)))
-    (expand-file-name config lspce-jdtls-install-dir)))            
+    (expand-file-name config lspce-jdtls-install-dir)))
 
 (defun lspce-jdtls-cmd-args ()
   (let ((server-jar (lspce--jdtls-locate-server-jar))
@@ -181,7 +187,7 @@ The entry point of the language server is in
 (defun lspce--jdtls-open-jdt-link (uri)
   (let ((filename (lspce--jdtls-get-jdt-filename uri))
         fullname content)
-    (when filename 
+    (when filename
       (setq fullname (f-join (lspce--jdtls-project-cache-dir) filename))
       ;; FIXME use a cache to reduce requesting
       (lspce--debug "jdt link uri %s" uri)
